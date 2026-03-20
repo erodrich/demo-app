@@ -27,3 +27,17 @@ jobs:
     - name: Push Docker image
       run: |
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/demo-app:${{ github.sha }}
+
+    - name: Update GitOps repo
+      run: |
+        git clone https://$GIT_TOKEN@github.com/erodrich/homelab-gitops.git
+        cd homelab-gitops
+
+        sed -i "s|image: .*|image: ${{ secrets.DOCKERHUB_USERNAME }}/demo-app:${{ github.sha }}|" apps/demo-app/deployment.yaml
+
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+
+        git add .
+        git commit -m "Update image to ${{ github.sha }}"
+        git push
