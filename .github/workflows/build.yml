@@ -30,7 +30,7 @@ jobs:
 
     - name: Update GitOps repo
       run: |
-        git clone https://secrets.GIT_TOKEN@github.com/erodrich/homelab-gitops.git
+        git clone https://$GIT_TOKEN@github.com/erodrich/homelab-gitops.git
         cd homelab-gitops
 
         sed -i "s|image: .*|image: ${{ secrets.DOCKERHUB_USERNAME }}/demo-app:${{ github.sha }}|" apps/demo-app/deployment.yaml
